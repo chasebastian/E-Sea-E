@@ -1,0 +1,85 @@
+<!DOCTYPE html >
+
+<html>
+
+<head>
+
+    <title> E Sea E </title>
+</head>
+
+<body>
+    <h1> E Sea E</h1>
+    <h2> An Automated Fish tank by Team Emo Nemo: Chase Bastian, Kyle Hu, Lingpeng Meng</h2>
+
+    <div id="outputs">
+        <h3> Current Tank Temperature: </h3> <!-- Will edit this entire inner html in javascript-->
+    </div>
+
+    <div id="inputs"> 
+        <label for="Temperature"> Insert Temperature (66-98F) </label>
+        <input id="Temperature" type="text"></input>
+
+        <label for="Feed"> Insert Feed (discuss this) </label>
+        <input id="Feed" type="text"></input>
+    </div>
+    <div>
+
+        <label for="LightOn"> Select Light On Time </label>
+        <select id="LightOnHour">
+            <option value=1> 1 </option>
+            <option value=2> 2 </option>
+            <option value=3> 3 </option>
+            <option value=4> 4 </option>
+            <option value=5> 5 </option>
+            <option value=6> 6 </option>
+            <option value=7> 7 </option>
+            <option value=8> 8 </option>
+            <option value=9> 9  </option>
+            <option value=10> 10  </option>
+            <option value=11> 11  </option>
+            <option value=12> 12  </option>
+        </select>
+        <select id="LightOnMinute">
+            <option value=0>  00 </option>
+            <option value=15> 15 </option>
+            <option value=30> 30 </option>
+            <option value=45> 45 </option>
+        </select>
+        <select id="LightOnAMPM">
+            <option value=0> AM </option>
+            <option value=1> PM </option>
+        </select>
+
+        <label for="LightOff"> Select Light Off Time </label>
+        <select id="LightOffHour">
+            <option value=1> 1 </option>
+            <option value=2> 2 </option>
+            <option value=3> 3 </option>
+            <option value=4> 4 </option>
+            <option value=5> 5 </option>
+            <option value=6> 6 </option>
+            <option value=7> 7 </option>
+            <option value=8> 8 </option>
+            <option value=9> 9  </option>
+            <option value=10> 10  </option>
+            <option value=11> 11  </option>
+            <option value=12> 12  </option>
+        </select>
+        <select id="LightOffMinute">
+            <option value=0>  00 </option>
+            <option value=15> 15 </option>
+            <option value=30> 30 </option>
+            <option value=45> 45 </option>
+        </select>
+        <select id="LightOffAMPM">
+            <option value=0> AM </option>
+            <option value=1> PM </option>
+        </select>
+    </div>
+    <div>
+        <input name="submit" type="button" value="Submit" onclick="submit()">
+    </div>
+
+    <script type="text/javascript" src="src/website.js"></script>
+</body>
+</html>
