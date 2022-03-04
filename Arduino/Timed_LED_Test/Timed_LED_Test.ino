@@ -4,12 +4,15 @@
 
 /* Pin Definitions */
 #define LED_PIN    6
+#define ALARM_PIN  2
 
 /* Variable Definitions */
 int prev_second = 0;
 int current_second = 0;
 bool light_state = false;
 
+DateTime lights_on_time;
+DateTime lights_off_time;
 
 /* Adafruit Neopixel Setup */
 
@@ -29,6 +32,7 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 /* RTC Setup */
 RTC_DS3231 rtc;
 
+char buf[50];
 
 void setup() {
   Serial.begin(57600);
@@ -52,13 +56,43 @@ void setup() {
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
   }
 
+  //we don't need the 32K Pin, so disable it
+  rtc.disable32K();
+
+  // alarm should trigger an interrupt
+  pinMode(ALARM_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(ALARM_PIN), toggleLights, FALLING); 
+
+  // set alarm 1, 2 flag to false (so alarm 1, 2 didn't happen so far)
+  // if not done, this easily leads to problems, as both register aren't reset on reboot/recompile
+  rtc.clearAlarm(1);
+  rtc.clearAlarm(2);
+
+  // stop oscillating signals at SQW Pin
+  // otherwise setAlarm1 will fail
+  rtc.writeSqwPinMode(DS3231_OFF);
+
+  // turn off alarm 2 (in case it isn't off already)
+  // again, this isn't done at reboot, so a previously set alarm could easily go overlooked
+  rtc.disableAlarm(2);
+
+  // set the alarm, currently toggles once per second
+  DateTime temp = rtc.now();
+  lights_on_time = DateTime(temp.year(), temp.month(), temp.day(), 7, 0);
+  lights_off_time =  DateTime(temp.year(), temp.month(), temp.day(), 19, 0);
+  if (!rtc.setAlarm1(lights_on_time, DS3231_A1_Hour)) {
+    Serial.println("Error, alarm wasn't set!");
+  } else {
+    Serial.println("Initial lights alarm set!");
+  }
+ 
 
   /* AdaFruit Setup Code */
   strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
   strip.show();            // Turn OFF all pixels ASAP
   //Brightness is set once, can reconsider setting this. For now uses less power.
   strip.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255)
-
+  Serial.write("Setup complete!");
 
 }
 
@@ -66,34 +100,29 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //Lets do this the dumb way, then look into doing it with interrupts
-  //Turn on and off LEDs every 5 seconds to see if its working with timer
-
-  DateTime now = rtc.now();  
-
+  //Turn on and off LEDs every 5 seconds to see if its working with timer    
+  char date[10] = "hh:mm:ss";
+}
   
-  
-  if( now.second()%10 == 0 ) { //If its been 5 seconds
-    Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();
-    
-    prev_second = current_second; //update prev second
+void toggleLights() {
+  //write the lights on or off
+  Serial.println("interrupt triggered!");
+  rtc.clearAlarm(1);
+  if(light_state) {
+    // lights are on, turn them off
+    strip.clear();
+    strip.show();
 
-    //write the lights on or off
-    if(light_state == true) colorWipe(strip.Color(255, 255, 255), 10);
-    else {
-      strip.clear();
-      strip.show();
-    }
-
-    light_state = !light_state;
-    
+    // get the alarm ready to turn off the lights
+    rtc.setAlarm1(lights_on_time, DS3231_A1_Hour);
   }
-  
+  else {
+    // lights are off, turn them on
+    colorWipe(strip.Color(255, 255, 255), 10);
 
+    // get the alarm ready to turn on the lights
+    rtc.setAlarm1(lights_off_time, DS3231_A1_Hour);
+  }
 }
 
 // Fill strip pixels one after another with a color. Strip is NOT cleared
@@ -106,4 +135,15 @@ void colorWipe(uint32_t color, int wait) {
     strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)
   }
   strip.show();
+}
+
+void setAlarmTime(uint16_t alarm_num, uint8_t hrs, uint8_t mins) {
+  DateTime temp = rtc.now();
+  DateTime t = DateTime(temp.year(), temp.month(), temp.day(), hrs, mins);
+  rtc.clearAlarm(alarm_num);
+  if (alarm_num == 1) {
+    rtc.setAlarm1(t, DS3231_A1_Hour);
+  } else {
+    rtc.setAlarm2(t, DS3231_A2_Hour);
+  }
 }
