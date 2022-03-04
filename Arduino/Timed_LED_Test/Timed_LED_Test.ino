@@ -11,6 +11,8 @@ int prev_second = 0;
 int current_second = 0;
 bool light_state = false;
 
+DateTime lights_on_time;
+DateTime lights_off_time;
 
 /* Adafruit Neopixel Setup */
 
@@ -74,11 +76,11 @@ void setup() {
   // again, this isn't done at reboot, so a previously set alarm could easily go overlooked
   rtc.disableAlarm(2);
 
-  // set the alarm, currently toggles once per second 
-  DateTime alarmTime = DateTime(2022, 3, 3);
-  // NOTE: change the alarm time to something reasonable + make sure it triggers when hours + mins match
-  // ALSO make sure to enable and set alarm 2, alarm2 will be our off interrupt
-  if (!rtc.setAlarm1(alarmTime, DS3231_A1_PerSecond)) {
+  // set the alarm, currently toggles once per second
+  DateTime temp = rtc.now();
+  lights_on_time = DateTime(temp.year(), temp.month(), temp.day(), 7, 0);
+  lights_off_time =  DateTime(temp.year(), temp.month(), temp.day(), 19, 0);
+  if (!rtc.setAlarm1(lights_on_time, DS3231_A1_Hour)) {
     Serial.println("Error, alarm wasn't set!");
   } else {
     Serial.println("Initial lights alarm set!");
@@ -105,21 +107,22 @@ void loop() {
 void toggleLights() {
   //write the lights on or off
   Serial.println("interrupt triggered!");
-  if(light_state == true) colorWipe(strip.Color(255, 255, 255), 10);
-  else {
+  rtc.clearAlarm(1);
+  if(light_state) {
+    // lights are on, turn them off
     strip.clear();
     strip.show();
-  }
 
-  light_state = !light_state;
-  if (light_state) {
-    digitalWrite(LED_BUILTIN, HIGH);
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
+    // get the alarm ready to turn off the lights
+    rtc.setAlarm1(lights_on_time, DS3231_A1_Hour);
   }
+  else {
+    // lights are off, turn them on
+    colorWipe(strip.Color(255, 255, 255), 10);
 
-  rtc.clearAlarm(1);
-  
+    // get the alarm ready to turn on the lights
+    rtc.setAlarm1(lights_off_time, DS3231_A1_Hour);
+  }
 }
 
 // Fill strip pixels one after another with a color. Strip is NOT cleared
