@@ -38,9 +38,13 @@ void sendMessage(String message) {
 }
 
 /*
- * Appends a "\n" character to the end of an
+ * Appends a "\n" character to the end of an input String if needed.
+ * May need to check compatability with Ser.println
  */
  String constructMessage(String message) {
 
   if(!message.endsWith("\n")) return message.concat("\n");
+  else return message;
  }
+
+ 

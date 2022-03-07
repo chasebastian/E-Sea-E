@@ -20,6 +20,8 @@ void loop() {
 
     //Receive bluetooth message and respond
     String message = receiveMessage();
+
+    //Input message is in form: /{
     respondToMessage(message);
 
     //Check temperature and toggle relays

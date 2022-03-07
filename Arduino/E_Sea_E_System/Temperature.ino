@@ -34,10 +34,10 @@ float getTemperature() {
   return F;
 }
 
-void toggleHeater(float currentTemperatureF) {
-  float temperatureDelta = currentTemperature - targetTemperatureF
+void toggleHeater(float currentTemperatureFF) {
+  float temperatureDelta = currentTemperatureF - targetTemperatureF
   
-  //If currentTemperatureF is greater than (targetTemperatureF - TEMPERATURE_TOLERANCE), turn off heater
+  //If currentTemperatureFF is greater than (targetTemperatureF - TEMPERATURE_TOLERANCE), turn off heater
   if( -(TEMPERATURE_TOLERANCE_ <= temperatureDelta) turnOffOutlet();
   else turnOnOutlet();
 }
