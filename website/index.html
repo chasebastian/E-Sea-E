@@ -2,15 +2,85 @@
 <html>
     <head>
         <title>E Sea E</title>
+        <link rel="stylesheet" href="styles.css">
     </head>
+    <header>
+        <nav>
+            <a href="#problem">Problem</a>
+            <a href="#solution">Solution</a>
+            <a href="#process">Process</a>
+            <a href="#challenges">Challenges</a>
+            <a href="#retrospective">Retrospective</a>
+            <a href="#resources">Resources</a>
+        </nav>
+    </header>
     <body>
-        <h1>E Sea E - Team Emo Nemos</h1>
-        <p>Project members: Chase Bastian, Kyle Hu, and Lingpeng Meng</p>
-        <h2> Problem </h2>
-        <p> Home saltwater fishtank upkeep (including monitoring food, water, temperature, salinity, pH, etc) is so time consuming that it is intimidating for the average person to pick up. </p>
-        <h2> Solution </h2>
-        <p> We created a unified system that monitors different parameters in a fishtank simultaneously. An Arduino Uno monitors the temperature of the fish tank, activating a water heater if it gets too low. It also cycles the lights on and off once per day, and dispenses food pellets five times a day at regular intervals. All of these parameters and setpoints can be controlled via a web interface, which communicates with the Arduino via Bluetooth. </p>
-        <h2> Process </h2>
-        <p> Since our project was fairly modular, we worked on most of the individual components in parallel simultaneously. While some of our group members tested the temperature sensors, stepper motors, and real time clock module, others designed the automatic feeder in CAD and designed the web interface. Some preliminary CAD designs are shown below. </p>
+        <h1>E Sea E - An automated fish tank monitoring system</h1>
+        <p>This website showcases the final result of our ECE 196 project. We are team Emo Nemos, consisting of me (Kyle Hu), Chase Bastian, and Lingpeng Meng.</p>
+        <section>
+            <h2 id="problem"> Problem </h2>
+            <p> This problem was inspired by my dad's experience with maintainting a fish tank, and based on research in various forums, home saltwater fishtank upkeep, including monitoring food, water, temperature, salinity, pH, etc, is so time consuming that it is intimidating for the average person to pick up. Fishtank owners need to keep track of all of these variables constantly, while maintaining systems needed to filter water, and also making sure feed their fish regularly. This requires that the owner be home all the time, which is not always feasible. Solutions to this problem do exist, though they are expensive (one particular solution we found is priced at almost $3000), so we aim to provide a solution to the problem using our limited budget.</p>
+        </section>
+        <section>
+            <h2 id="solution"> Solution </h2>
+            <p> We created a unified system that monitors and controls different parameters in a fishtank simultaneously. An Arduino Uno monitors the temperature of the fish tank, activating a water heater if it gets too low. It also cycles the lights on and off once per day, and dispenses food pellets five times a day at regular intervals. All of these parameters and setpoints can be controlled via a web interface, which communicates with the Arduino via Bluetooth. </p>
+            <p> Our hypothesis for testing included the following requirements: </p>
+            <ul>
+                <li> The feeder should be able to provide 5 pellets per fish per day. </li>
+                <li> The lighting system should be able to provide 12 hours of light per day. </li>
+                <li> The heating system should keep the tank temperature between 74 and 79 degrees Farenheit. </li>
+            </ul>
+        </section>
+        <section>
+            <h2 id="process"> Process </h2>
+            <p> Since our project was fairly modular, we worked on most of the individual components in parallel simultaneously. While some of our group members tested the temperature sensors, stepper motors, and real time clock module, others designed the automatic feeder in CAD and designed the web interface. Some preliminary CAD designs are shown below. </p>
+            <!-- TODO: CAD PICTURES -->
+            <p>To design the automatic feeder, I started by researching patents and drawing out diagrams for potential mechanisms that we could use. Most patents I found seemed to feature an Archimides screw, so this ended up being the basis for my final design, since this would be the easiest to put together. </p>
+            <p> While I designed the feeder, Chase and Lingpeng worked to test the temperature sensor, real time clock, lighting system, and Bluetooth module. </p>
+        </section>
+        <section>
+            <h2 id="challenges"> Challenges </h2>
+            <p>Some challenges we faced included:</p>
+            <ul>
+                <li> My inexperience with CAD led me to make more errors with clearances than I would have liked, which slowed down the process a lot. </li>
+                <li> Our PCB design, meant for mounting sensors and motors to the Arduino, ended up being unused due to us switching from using a DC motor to a stepper. </li>
+                <li> We learned how to use interrupts from the RTC to signal the Arduino to turn the lights on/off at scheduled times, and faced many issues setting it up. </li>
+                <li> We realized that our initial method of using a relay to directly control a 120V line was 
+            </ul>
+        </section>
+        <section>
+            <h2 id="retrospective"> Retrospective </h2>
+            <h3> Feeder </h3>
+            <p> While the feeder is able to dispense fish pellets automatically, there are two main reasons why I am unsatisfied with it: </p>
+            <ul>
+                <li> The mechanism where the screw meets the housing has a sharp corner that jams fish pellets. </li>
+                <li> The hole where food goes in is too small and makes it difficult to reload the feeder. A hopper would have been helpful but due to time constraints and me unable to figure out how to CAD this I went with the simpler design.</li>
+            </ul>
+            <p> Had I been faster with prototyping, I may have been able to catch these issues earlier and potentially redesign the housing and avoid these issues. However, I am glad that I was able to at least get a prototype of the mechanism working. </p>
+            <h3> Temperature Control </h3>
+            <h3> Lighting </h3>
+            <h3> Web Application / Bluetooth </h3>
+        <section>
+            <h2 id="resources"> Resources </h2>
+            <h3> Problem Research </h3>
+            <ul>
+                <li> <a href="https://www.fishkeepingworld.com/clownfish/">Clownfish Living Requirements</li>
+                    <li> <a href="https://www.reef2reef.com/"> Saltwater Aquarium Forums</a></li>
+                    <li> <a href="https://www.bulkreefsupply.com/trident-apex-controller-system-dream-bundle-neptune-systems-bundle.html">Example of Fully Automated System </a> </li>
+                    <li> <a href="https://www.wellbots.com/products/aquagenesis-robosnail-automatic-aquarium-glass-cleaner-for-fish-tanks">Automated Cleaner</a></li>
+                    <li> <a href="https://www.amazon.com/dp/B003SNU1I2/">Heater with Temperature Control</a></li>
+            </ul>
+            <h3> Component Datasheets and Guides</h3>
+            <ul>
+                <li> <a href="https://datasheets.maximintegrated.com/en/ds/DS3231.pdf">RTC Datasheet</a> </li>
+                <li> <a href="https://www.circuitbasics.com/how-to-use-a-real-time-clock-module-with-the-arduino/"> RTC Tutorial</a> </li>
+                <li> <a href="https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf"> Temperature Sensor Datasheet </a> </li>
+                <li> <a href="https://create.arduino.cc/projecthub/iotboys/how-to-use-ds18b20-water-proof-temperature-sensor-2adecc"> Temperature Sensor Tutorial </a></li>
+                <li> <a href="https://www.sparkfun.com/tutorials/119"> Controllable Outlet Tutorial </a></li>
+                <li> <a href="https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf"> LED Datasheet </a></li>
+                <li> <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use"> LED Guide 1</a> </li> 
+                <li> <a href="https://create.arduino.cc/projecthub/electropeak/neopixel-how-to-control-ws2812-rgb-led-w-arduino-46c08f"> LED Guide 2</a> </li> 
+            </ul>
+        </section>
     </body>
 </html>
