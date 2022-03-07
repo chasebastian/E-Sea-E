@@ -2,15 +2,11 @@
 #include <DallasTemperature.h>
 
 //Define Temperature Sensor Pins
-#define ONE_WIRE_BUS 9
+#define ONE_WIRE_BUS 13
 
 //Define global Temperature variables
 //NOTE: This F value might not be accessible in main code. TBD
 float F = 0;
-uint8_t sampleDelaySeconds = 60;                          //Seconds between samples
-unsigned long sampleDelay = sampleDelaySeconds*1e6;       //Time between samples. 
-unsigned long timeStart = 0;                              //Start time timing variable
-unsigned long timeEnd = 0;                                //End time timing variable
 
 
 

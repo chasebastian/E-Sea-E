@@ -1,9 +1,16 @@
+#Pyramid Imports
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response, FileResponse
 
+#Bluetooth import
+from Communication import Communication
+
+
 # TODO: Need to add imports for bluetooth
 # TODO: Create bluetooth communication object
+
+Ser = Communication("COM6", 9600)
 
 def get_home(req):
     return FileResponse("index.html")
@@ -13,7 +20,12 @@ def get_home(req):
 def update(req):
 
     #Insert code for reading current temp (in F) via bluetooth connection
-    currentTemperature = #READ IN VALUE
+    currentTemperature = 0
+    message = Ser.receive_message(50)
+
+    if message is not None: 
+        currentTemperature = float(message)
+        print(message)
 
     return {'currentTemperature' : currentTemperature } 
 
@@ -24,10 +36,11 @@ def set_parameters(req):
     on_time = req.matchdict['on_hour'] + ":" + req.matchdict['on_minute']
     off_time = req.matchdict['off_hour'] + ":" + req.matchdict['off_minute']
 
-    #TODO: Send this data to the arduino using bluetooth communication
+    message = "/" + temperature + "/" + feed + "/" + on_time + "/" + off_time + "/"
+
+    Ser.send_message(message)
 
     return {} #return empty JSON object to prevent Pyramid errors. This function does not need to respond, just send info to arduino
-
 
 
 
@@ -47,7 +60,7 @@ if __name__ == '__main__':
 
         
 
-        config.add_static_view(name='/', path='./public', cache_max_age=3600)
+        config.add_static_view(name='/', path='./src', cache_max_age=3600)
 
         app = config.make_wsgi_app()
  

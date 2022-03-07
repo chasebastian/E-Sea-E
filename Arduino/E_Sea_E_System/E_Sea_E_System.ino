@@ -21,7 +21,7 @@ void loop() {
     //Receive bluetooth message and respond
     String message = receiveMessage();
 
-    //Input message is in form: /{
+    //Input message is in form: /{temperature}/{feed}/{on_time}/{off_time}/
     respondToMessage(message);
 
     //Check temperature and toggle relays
@@ -39,3 +39,35 @@ void loop() {
 
 //TODO: Implement respondToMessage to properly respond to message
 //      Needs to set target temperature, program alarm time, (Nothing else?)
+void respondToMessage(String message) {
+  //Input message is in form: /{temperature}/{feed}/{on_time}/{off_time}/
+  int currentSlash = 0;
+  int nextSlash = 0;
+
+  //indexOf syntax: myString.indexOf(character, startIndex);
+
+  //Find initial "/"
+  currentSlash = message.indexOf("/", 0);
+
+  //Find next "/"
+  nextSlash = message.indexOf("/", currentSlash); //Looks for next "/" after current slash
+
+  //Read in temperature
+
+  String targetTemperatureString = message.substring(currentSlash + 1, nextSlash); //substring includes starting index, excludes ending index
+                                                                                   //therefore add 1 to starting index to exlcude beginning slash
+
+  //Set target temperature
+  targetTemperatureF = targetTemperatureString.toFloat();
+
+  //move to next slash and read in feed
+  currentSlash = nextSlash;
+  nextSlash = message.indexOf("/", currentSlash); //Looks for next "/" after current slash
+
+  //Read in feed
+  String feedString = message.substring
+
+  
+
+  
+}

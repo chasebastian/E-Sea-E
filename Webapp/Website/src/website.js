@@ -46,8 +46,9 @@ async function update() {
     let response = await fetch(theURL).then(response => response.json());
 
     let theTemperature = response['currentTemperature'];
+    console.log(theTemperature)
 
-    let theCurrentTemperatureOutput = document.getElementById('outputs h3');
+    let theCurrentTemperatureOutput = document.getElementById('currentTemperature');
     theCurrentTemperatureOutput.textContent = "Current Tank Temperature: " + theTemperature;
 
     //If we decide to display anything else, we will need to add it here

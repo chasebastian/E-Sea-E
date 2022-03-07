@@ -28,7 +28,7 @@ class Communication:
   '''
 
   def setup(self):
-    self.__ser = serial.Serial(self.__serial_name, self.__baud_rate)
+    self.__ser = serial.Serial(self.__serial_name, self.__baud_rate, timeout=5)
 
   '''
   Close Serial connection. Wait 0.5s to allow commands to finish executing.
@@ -56,7 +56,7 @@ class Communication:
 
   def receive_message(self,num_bytes=50):
     if(self.__ser.in_waiting > 0):
-      return self.__ser.readline(num_bytes).decode('utf-8')
+      return self.__ser.readline(num_bytes).decode('utf-8')[:-1]
     else:
       return None
 
@@ -71,13 +71,16 @@ class Communication:
 #Test Code
 if __name__ == "__main__":
 
-    Communication device(9600, "COM5")
-    while True:
-        message = input('type input pls:')
-        if message == 'q':
-            break
+    device = Communication("COM6", 9600)
 
-        device.send_message(message)
-        sleep(0.1)
-        response= device.receive_message(50)
-        print(response)
+    try:
+
+        while True:
+            response= device.receive_message(50)
+            if response is not None:
+                response = response[:-1]
+                print("Message Received: %s" %response)
+
+    except KeyboardInterrupt:
+        device.close()
+        exit()

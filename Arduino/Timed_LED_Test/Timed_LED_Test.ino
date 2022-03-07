@@ -113,14 +113,14 @@ void toggleLights() {
     strip.clear();
     strip.show();
 
-    // get the alarm ready to turn off the lights
+    // get the alarm ready to turn on the lights
     rtc.setAlarm1(lights_on_time, DS3231_A1_Hour);
   }
   else {
     // lights are off, turn them on
     colorWipe(strip.Color(255, 255, 255), 10);
 
-    // get the alarm ready to turn on the lights
+    // get the alarm ready to turn off the lights
     rtc.setAlarm1(lights_off_time, DS3231_A1_Hour);
   }
 }

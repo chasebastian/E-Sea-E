@@ -34,7 +34,7 @@ void setupRTC() {
   // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
 }
 
-bool timeElapsed(int timeInSeconds, int& refTime) {
+bool timeElapsed(int timeInSeconds, unsigned long* refTime) {
 
   unsigned long timeInMicro = timeInSeconds*1e6;
   unsigned long currentTime = micros();
