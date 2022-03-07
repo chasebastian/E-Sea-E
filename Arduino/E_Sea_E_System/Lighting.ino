@@ -25,6 +25,7 @@ void setupLighting() {
 void turnOnLights() {
   uint32_t color = strip.Color(255, 255, 255);
   strip.fill(color); //Writes all LEDs on strip to input color (white)
+  strip.show();
 }
 
 
@@ -34,4 +35,37 @@ void turnOnLights() {
 void turnOffLights() {
 
   strip.clear(); //Clears all LEDs on strip
+  strip.show();
+}
+
+void toggleLights() {
+  //write the lights on or off
+  Serial.println("interrupt triggered!");
+  rtc.clearAlarm(1);
+  if(light_state) {
+    
+    // lights are on, turn them off
+    turnOffLights();
+
+    // get the alarm ready to turn on the lights
+    rtc.setAlarm1(lights_on_time, DS3231_A1_Hour);
+  }
+  else {
+    // lights are off, turn them on
+    turnOnLights();
+
+    // get the alarm ready to turn off the lights
+    rtc.setAlarm1(lights_off_time, DS3231_A1_Hour);
+  }
+}
+
+void setAlarmTime(uint16_t alarm_num, uint8_t hrs, uint8_t mins) {
+  DateTime temp = rtc.now();
+  DateTime t = DateTime(temp.year(), temp.month(), temp.day(), hrs, mins);
+  rtc.clearAlarm(alarm_num);
+  if (alarm_num == 1) {
+    rtc.setAlarm1(t, DS3231_A1_Hour);
+  } else {
+    rtc.setAlarm2(t, DS3231_A2_Hour);
+  }
 }
