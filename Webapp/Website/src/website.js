@@ -46,10 +46,10 @@ async function update() {
     let response = await fetch(theURL).then(response => response.json());
 
     let theTemperature = response['currentTemperature'];
-    console.log(theTemperature)
+    console.log(theTemperature);
 
-    let theCurrentTemperatureOutput = document.getElementById('currentTemperature');
-    theCurrentTemperatureOutput.textContent = "Current Tank Temperature: " + theTemperature;
+    let theCurrentTemperatureOutput = document.getElementById('#the-temperature');
+    theCurrentTemperatureOutput.textContent = theTemperature;
 
     //If we decide to display anything else, we will need to add it here
 
@@ -62,4 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
         //This code will execute every 5 seconds
         update();
     }, 5000);
+
+    const temperatureInput = document.querySelector('#Temperature');
+    const temperatureDisplay = document.querySelector('#temp-current');
+    temperatureInput.addEventListener('input', (e) => {
+        temperatureDisplay.innerHTML = e.target.value;
+    });
+
+    const feedInput = document.querySelector('#Feed');
+    const feedDisplay = document.querySelector('#feed-current');
+    feedInput.addEventListener('input', (e) => {
+        feedDisplay.innerHTML = e.target.value;
+    });
  }, false);

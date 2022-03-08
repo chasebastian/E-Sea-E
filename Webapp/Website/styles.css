@@ -1,0 +1,27 @@
+* {
+    font-family: "Avenir";
+    background-color: #2C5784;
+    color: #C7E8F3;
+    text-align: center;
+}
+
+
+
+input {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+select {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+#the-temperature {
+    color: #7CDF54;
+}
+
+#description {
+    font-style: italic;
+    color: #E1CE7A;
+}

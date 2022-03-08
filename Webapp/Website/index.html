@@ -3,28 +3,29 @@
 <html>
 
 <head>
-
     <title> E Sea E </title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <h1> E Sea E</h1>
-    <h2> An Automated Fish tank by Team Emo Nemo: Chase Bastian, Kyle Hu, Lingpeng Meng</h2>
+    <h1> E Sea E </h1>
+    <p id="description"> An Automated Fish tank by Team Emo Nemos: Chase Bastian, Kyle Hu, Lingpeng Meng </p>
 
     <div id="outputs">
-        <h3 id="currentTemperature"> Current Tank Temperature: </h3> <!-- Will edit this entire inner html in javascript-->
+        <h3 id="currentTemperature"> Current Tank Temperature: <span id="the-temperature">75</span></h3> <!-- Will edit this entire inner html in javascript-->
     </div>
 
     <div id="inputs"> 
-        <label for="Temperature"> Insert Temperature (66-98F) </label>
-        <input id="Temperature" type="text"></input>
+        <label for="Temperature"> Insert Temperature (<span id="temp-current">75</span>): </label>
+        <input id="Temperature" type="range" min="66" max="98" value="75"></input>
 
-        <label for="Feed"> Insert Feed (discuss this) </label>
-        <input id="Feed" type="text"></input>
+        <br/>
+
+        <label for="Feed"> Number of Fish (<span id="feed-current">1</span>): </label>
+        <input id="Feed" type="range" min="1" max="10" value="1"></input>
     </div>
-    <div>
-
-        <label for="LightOn"> Select Light On Time </label>
+    <div id="lighting-times">
+        <label for="LightOn"> Select Light On Time: </label>
         <select id="LightOnHour">
             <option value=1> 1 </option>
             <option value=2> 2 </option>
@@ -50,7 +51,9 @@
             <option value=1> PM </option>
         </select>
 
-        <label for="LightOff"> Select Light Off Time </label>
+        <br/>
+
+        <label for="LightOff"> Select Light Off Time: </label>
         <select id="LightOffHour">
             <option value=1> 1 </option>
             <option value=2> 2 </option>
@@ -76,6 +79,7 @@
             <option value=1> PM </option>
         </select>
     </div>
+    <br/>
     <div>
         <input name="submit" type="button" value="Submit" onclick="submit()">
     </div>
