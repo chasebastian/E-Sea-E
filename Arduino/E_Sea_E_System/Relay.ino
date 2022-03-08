@@ -1,5 +1,5 @@
-#define RELAY_ON = 4
-#define RELAY_OFF = 5
+#define RELAY_ON  4
+#define RELAY_OFF  5
 
 void setupRelay() {
 

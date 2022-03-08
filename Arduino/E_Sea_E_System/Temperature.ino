@@ -1,8 +1,9 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-//Define Temperature Sensor Pins
+//Defines for Temperature Script
 #define ONE_WIRE_BUS 13
+#define TEMPERATURE_TOLERANCE .5
 
 //Define global Temperature variables
 //NOTE: This F value might not be accessible in main code. TBD
@@ -30,11 +31,11 @@ float getTemperature() {
   return F;
 }
 
-void toggleHeater(float currentTemperatureFF) {
-  float temperatureDelta = currentTemperatureF - targetTemperatureF
+void toggleHeater(float currentTemperatureF) {
+  float temperatureDelta = currentTemperatureF - targetTemperatureF;
   
   //If currentTemperatureFF is greater than (targetTemperatureF - TEMPERATURE_TOLERANCE), turn off heater
-  if( -(TEMPERATURE_TOLERANCE_ <= temperatureDelta) turnOffOutlet();
+  if( -(TEMPERATURE_TOLERANCE <= temperatureDelta) ) turnOffOutlet();
   else turnOnOutlet();
 }
 

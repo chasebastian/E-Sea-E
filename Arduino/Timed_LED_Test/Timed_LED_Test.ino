@@ -35,7 +35,7 @@ RTC_DS3231 rtc;
 char buf[50];
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(9600);
 
   /* RTC Setup Code */
 
@@ -80,7 +80,7 @@ void setup() {
   DateTime temp = rtc.now();
   lights_on_time = DateTime(temp.year(), temp.month(), temp.day(), 7, 0);
   lights_off_time =  DateTime(temp.year(), temp.month(), temp.day(), 19, 0);
-  if (!rtc.setAlarm1(lights_on_time, DS3231_A1_Hour)) {
+  if (!rtc.setAlarm1(lights_on_time, DS3231_A1_PerSecond)) {
     Serial.println("Error, alarm wasn't set!");
   } else {
     Serial.println("Initial lights alarm set!");
@@ -92,7 +92,7 @@ void setup() {
   strip.show();            // Turn OFF all pixels ASAP
   //Brightness is set once, can reconsider setting this. For now uses less power.
   strip.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255)
-  Serial.write("Setup complete!");
+  //Serial.write("Setup complete!");
 
 }
 
@@ -106,23 +106,23 @@ void loop() {
   
 void toggleLights() {
   //write the lights on or off
-  Serial.println("interrupt triggered!");
-  rtc.clearAlarm(1);
+  //Serial.println("interrupt triggered!");
   if(light_state) {
     // lights are on, turn them off
     strip.clear();
     strip.show();
 
     // get the alarm ready to turn on the lights
-    rtc.setAlarm1(lights_on_time, DS3231_A1_Hour);
+    //rtc.setAlarm1(lights_on_time, DS3231_A1_PerSecond);
   }
   else {
     // lights are off, turn them on
     colorWipe(strip.Color(255, 255, 255), 10);
 
     // get the alarm ready to turn off the lights
-    rtc.setAlarm1(lights_off_time, DS3231_A1_Hour);
+    //rtc.setAlarm1(lights_off_time, DS3231_A1_PerSecond);
   }
+  rtc.clearAlarm(1);
 }
 
 // Fill strip pixels one after another with a color. Strip is NOT cleared

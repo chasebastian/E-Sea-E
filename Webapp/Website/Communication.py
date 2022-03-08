@@ -56,7 +56,9 @@ class Communication:
 
   def receive_message(self,num_bytes=50):
     if(self.__ser.in_waiting > 0):
-      return self.__ser.readline(num_bytes).decode('utf-8')[:-1]
+      message = self.__ser.readline(num_bytes).decode('utf-8')[:-1]
+      self.__ser.flushInput()
+      return message
     else:
       return None
 

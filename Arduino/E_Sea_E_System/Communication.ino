@@ -1,8 +1,8 @@
 #include <SoftwareSerial.h>
 
 //Initialize Bluetooth pins
-#define BLUETOOTH_RX = 2
-#define BLUETOOTH_TX = 3
+#define BLUETOOTH_RX  3
+#define BLUETOOTH_TX  7
 
 //Initialize Global Bluetooth object, for use in other modules
  SoftwareSerial Ser(BLUETOOTH_RX, BLUETOOTH_TX); // RX | TX 
@@ -34,7 +34,7 @@ String receiveMessage() {
  * TODO: Ask lingpeng if I can send via bluetooth more than one character
  */
 void sendMessage(String message) {
-  Ser.println(message);
+  Ser.print(message);
 }
 
 /*
@@ -43,7 +43,10 @@ void sendMessage(String message) {
  */
  String constructMessage(String message) {
 
-  if(!message.endsWith("\n")) return message.concat("\n");
+  if(!message.endsWith("\n")){
+    message = message + "\n";
+    return message;
+  }
   else return message;
  }
 

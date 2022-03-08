@@ -4,8 +4,8 @@
 #include <SoftwareSerial.h>
 
 //Initialize Bluetooth pins
-#define BLUETOOTH_RX  2
-#define BLUETOOTH_TX  3
+#define BLUETOOTH_RX  3
+#define BLUETOOTH_TX  7
 
 //Initialize Global Bluetooth object, for use in other modules
  SoftwareSerial Ser(BLUETOOTH_RX, BLUETOOTH_TX); // RX | TX 
@@ -96,7 +96,7 @@ bool timeElapsed(int timeInSeconds, unsigned long& refTime) {
   unsigned long timeInMicro = timeInSeconds*1e6;
   unsigned long currentTime = micros();
 
-  if(currentTime - refTime >= timeInSeconds) {
+  if(currentTime - refTime >= timeInMicro) {
     refTime = micros();
     return true;
   }
@@ -112,12 +112,13 @@ bool timeElapsed(int timeInSeconds, unsigned long& refTime) {
 
  void loop() {
 
-  if(timeElapsed(1, refTime)) {
+  if(timeElapsed(5, refTime)) {
 
     float currentTemperature = getTemperature();
     String message = String(currentTemperature);
     message = constructMessage(message);
     sendMessage(message);
+    Serial.print(message);
 
     message = receiveMessage();
     Serial.print(message);

@@ -23,9 +23,13 @@ def update(req):
     currentTemperature = 0
     message = Ser.receive_message(50)
 
-    if message is not None: 
-        currentTemperature = float(message)
-        print(message)
+    if message is not None:
+        print(message) 
+        try: 
+            currentTemperature = float(message)
+        except: 
+            print(repr(message))
+        
 
     return {'currentTemperature' : currentTemperature } 
 
