@@ -10,7 +10,7 @@ from Communication import Communication
 # TODO: Need to add imports for bluetooth
 # TODO: Create bluetooth communication object
 
-Ser = Communication("COM6", 9600)
+#Ser = Communication("COM6", 9600)
 
 def get_home(req):
     return FileResponse("index.html")
@@ -19,7 +19,6 @@ def get_home(req):
 #Reads current temperature data from Arduino, returns it to website to display
 def update(req):
 
-    #Insert code for reading current temp (in F) via bluetooth connection
     currentTemperature = 0
     message = Ser.receive_message(50)
 
@@ -29,6 +28,8 @@ def update(req):
             currentTemperature = float(message)
         except: 
             print(repr(message))
+    else:
+        print("Message is none")
         
 
     return {'currentTemperature' : currentTemperature } 

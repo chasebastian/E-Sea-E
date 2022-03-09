@@ -46,12 +46,9 @@ void turnOffLights() {
 
 //NOTE: right now we are feeding at the same time as lights toggle. This could be a problem
 void toggleLights() {
-  //------------------FEED (CONSIDER MOVING) --------------------
-  
-  //write the lights on or off
-  //Serial.println("interrupt triggered!");
-  //feed(feedNumber);
-  
+
+  feedFlag = true;
+    
   if(lightState) {
     lightState = false;
     // lights are on, turn them off

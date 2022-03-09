@@ -32,10 +32,15 @@ float getTemperature() {
 }
 
 void toggleHeater(float currentTemperatureF) {
+  Serial.print("current Temperature ");
+  Serial.print(currentTemperatureF);
+  Serial.print(" target Temperature ");
+  Serial.println(targetTemperatureF);
+  
   float temperatureDelta = currentTemperatureF - targetTemperatureF;
   
   //If currentTemperatureFF is greater than (targetTemperatureF - TEMPERATURE_TOLERANCE), turn off heater
-  if( -(TEMPERATURE_TOLERANCE <= temperatureDelta) ) turnOffOutlet();
+  if( (-(TEMPERATURE_TOLERANCE) <= temperatureDelta) ) turnOffOutlet();
   else turnOnOutlet();
 }
 

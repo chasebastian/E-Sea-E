@@ -4,8 +4,8 @@
 //Initialize Lighting constants
 #define LED_PIN    6
 #define ALARM_PIN  2
-#define LED_COUNT 100
-#define ALARM_MODE DS3231_A1_PerSecond
+#define LED_COUNT 150
+#define ALARM_MODE DS3231_A1_Second
 
 extern RTC_DS3231 rtc;
 
@@ -13,6 +13,7 @@ extern RTC_DS3231 rtc;
 DateTime light_on_time;
 DateTime light_off_time;
 bool lightState = false;
+bool feedFlag = false;
 
 
 //Variables for testing
@@ -20,8 +21,8 @@ int intervalTime = 5;
 
 //Setup Global Variables for main script
 unsigned long pastTime = 0;
-uint8_t targetTemperatureF = 0;
-int feedNumber = 0;
+uint8_t targetTemperatureF = 75;
+int feedNumber = 1;
 
 void setup() {
   Serial.begin(9600);
@@ -53,13 +54,19 @@ void loop() {
 
     if (message != "") {
     //Input message is in form: /{temperature}/{feed}/{on_time}/{off_time}/
-      Serial.print("Message: " + message);
+      Serial.println("Message: " + message);
       respondToMessage(message);
     }
 
     //Check temperature and toggle relays
     float currentTemperatureF = getTemperature();
     toggleHeater(currentTemperatureF);
+
+    //Check feed flag, and feed if true
+    if(feedFlag) {
+      feed(feedNumber);
+      feedFlag = false;
+    }
 
     //TODO: send all current targets to website, not just temperature
     //Send current temperature to website
@@ -84,7 +91,7 @@ void respondToMessage(String message) {
   currentSlash = message.indexOf("/", 0);
 
   //Find next "/"
-  nextSlash = message.indexOf("/", currentSlash); //Looks for next "/" after current slash
+  nextSlash = message.indexOf("/", currentSlash + 1); //Looks for next "/" after current slash
 
   //Read in temperature
 
@@ -92,15 +99,14 @@ void respondToMessage(String message) {
                                                                                    //therefore add 1 to starting index to exlcude beginning slash.
                                                                                    //No changes needed to ending index.
 
-  //Set target temperature
-  targetTemperatureF = targetTemperatureString.toFloat();
 
-  Serial.print("Target Temperature: ");
-  Serial.println(targetTemperatureF);
+  //Set target temperature
+  targetTemperatureF = targetTemperatureString.toInt();
+
 
   //move to next slash and read in feed
   currentSlash = nextSlash;
-  nextSlash = message.indexOf("/", currentSlash);
+  nextSlash = message.indexOf("/", currentSlash + 1);
 
   //Read in feed
   String feedString = message.substring(currentSlash + 1, nextSlash);
@@ -108,13 +114,10 @@ void respondToMessage(String message) {
   //Set feed number
   feedNumber = feedString.toInt();
 
-  Serial.print("feed Number: ");
-  Serial.println(feedNumber);
-
 
   //move to next slash and read in on_time
   currentSlash = nextSlash;
-  nextSlash = message.indexOf("/", currentSlash);
+  nextSlash = message.indexOf("/", currentSlash + 1);
 
   //read in on time
   String onTimeString = message.substring(currentSlash + 1, nextSlash);
@@ -127,7 +130,7 @@ void respondToMessage(String message) {
 
   //move to next slash and read in off_time
   currentSlash = nextSlash;
-  nextSlash = message.indexOf("/", currentSlash);
+  nextSlash = message.indexOf("/", currentSlash + 1);
 
   //read in off time
   String offTimeString = message.substring(currentSlash + 1, nextSlash);
@@ -135,14 +138,6 @@ void respondToMessage(String message) {
   colonIndex = offTimeString.indexOf(":");
   int offTimeHour = offTimeString.substring(0, colonIndex).toInt();
   int offTimeMinute = offTimeString.substring(colonIndex + 1).toInt(); //to end of string
-
-  Serial.print("On Time: ");
-  Serial.print(onTimeHour);
-  Serial.println(onTimeMinute);
-
-  Serial.print("Off Time: ");
-  Serial.print(offTimeHour);
-  Serial.println(offTimeMinute);
 
   //Now change light_on_time and light_off_time to new inputs
   DateTime temp = rtc.now();
