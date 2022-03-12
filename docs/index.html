@@ -13,10 +13,12 @@
             <a href="#retrospective">Retrospective</a>
             <a href="#resources">Resources</a>
             <a href="team.html">Team Info</a>
+            <a href="https://drive.google.com/file/d/1IAbv8TC2JAnj5q5ynrfEstL3-Jtm4sj-/view?usp=sharing">Video Demo</a>
+            <a href="https://docs.google.com/presentation/d/159DbDm5CecAM4TqwDyzYbv7saCMBTZ9Y6QjjBOei0Mo/edit?usp=sharing">Presentation</a>
         </nav>
     </header>
     <body>
-        <h1>E Sea E - An automated fish tank monitoring system</h1>
+        <h1 id="project-header">E Sea E - An automated fish tank monitoring system</h1>
         <p>This website showcases the final result of our ECE 196 project. We are <a href="team.html">Team Emo Nemos</a>.</p>
         <section>
             <h2 id="problem"> Problem </h2>
@@ -34,8 +36,10 @@
             <img class="product-img" src="assets/system-img.jpg">
 
             <h3> System Overview</h3>
-            <p>The Arduino is the main control unit of the entire system. It monitors temperature and turns on/off the heater if the water temperature gets too hot or cold. It also toggles the lighting and activates the feeding system every time it receives an interrupt from the real time clock (RTC) module. </p>
+            <p>The Arduino is the main control unit of the entire system. It monitors temperature and turns on/off the heater if the water temperature gets too hot or cold. It also toggles the lighting and activates the feeding system every time it receives an interrupt from the real time clock (RTC) module. Below is a diagram showing how the overall system is connected together.</p>
             <img src="assets/E Sea E Web Control.jpg">
+            <p> Additionally, below is another diagram demonstrating how the device on the fish tank is wired up. </p>
+            <img src="assets/Arduino Wiring Diagram.png">
             <h4> Timing </h4>
             <p> Fish need a day/night cycle, and the Arduino cannot keep accurate time by itself, so we use an RTC module to do so. Under regular use, the RTC will fire an interrupt whenever a certain time of day is reached (in our case, when a certain hour and minute is reached). The Arduino then runs an interrupt handler that both toggles the lights (turns them on if they are off and off if they are on), activates the feeder, and sets the next time when the RTC should trigger the next interrupt. </p>
             <h4> Feeding </h4>
@@ -54,7 +58,7 @@
                 <img src="assets/Feeder Screw 1.png">
                 <img src="assets/Food Housing 2.png">
                 <img src="assets/Food Housing 3.png">
-                <img src="assets/Screw Housing.png"
+                <img src="assets/Screw Housing.png">
             </div>
             <p> To design the automatic feeder, we started by researching patents and drawing out diagrams for potential mechanisms that we could use. Most patents we found seemed to feature an Archimides screw, so this ended up being the basis for our final design, since this would be the easiest to put together. Kyle then created CAD models and printed them out in the Maker space. Several iterations were required to fix issues with clearances, and we switched from a DC motor to a stepper motor as we realized a DC motor was far too quick for our purposes. In the end, the mechanism worked, apart from some jamming issues that we unfortunately did not have time to fix. </p>
             <p> To construct many of the circuit components such as the RTC, LED lights, Bluetooth communication, and relay we followed the documentation and guides linked in our resources to build the circuit, and typically used the example code given in each library to confirm everything worked. The documentation in combination with example code from libraries allowed us to construct the functions we would need, such as turning the lights on to all one color, attaching an interrupt to the RTC chip to toggle the lights, or opening Bluetooth communication. </p>
@@ -74,6 +78,7 @@
         </section>
         <section>
             <h2 id="retrospective"> Retrospective </h2>
+            <p>Overall, our biggest problem was that we had no clear vision of what the end product was supposed to look like, so our wiring ended up being incredibly messy. This would also be problematic on a fish tank as exposed wiring could be corroded by saltwater, so designing a housing and circuitboard would have been extremely helpful.</p>
             <h3> Feeder </h3>
             <p> While the feeder is able to dispense fish pellets automatically, there are two main reasons why we are unsatisfied with it: </p>
             <ul>
@@ -84,7 +89,7 @@
             <h3> Temperature Control </h3>
             <p> Our design in theory works well, however it is liable to toggling the heater on and off more than necessary. We should consider implementing some time of more intelligent control so as to not undershoot or overshoot the target temperature causing frequent adjustments. Also, in the future we should implement cleaner heater control as right now the hijacked remote controlled outlet is large and unwieldy. </p>
             <h3> Lighting </h3>
-            <p> This part of the system turned to be the most successful, so we're happy with it! One thing we do want to look into should we do this again would be to look for cheaper alternatives to the neopixel strip, or even perhaps making our own LED strip and control circuit. </p>
+            <p> This part of the system turned out to be the most successful, so we're happy with it! One thing we want to look into if we do this again is to look for cheaper alternatives to the neopixel strip, or even perhaps make our own LED strip and control circuit. </p>
             <h3> Web Application / Bluetooth </h3>
             <p> To improve our Web Application, we should display more information from the Arduino such as current temperature, feeding, and lighting metrics. Also, we should consider moving entirely from Bluetooth to Wifi so that the user does not have to pair to the Arduino to change metrics, and instead can access the webpage from anywhere. </p>
         <section>
