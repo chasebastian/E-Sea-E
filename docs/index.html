@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+ <html>
     <head>
         <title>E Sea E</title>
         <link rel="stylesheet" href="styles.css">
@@ -12,61 +12,88 @@
             <a href="#challenges">Challenges</a>
             <a href="#retrospective">Retrospective</a>
             <a href="#resources">Resources</a>
+            <a href="team.html">Team Info</a>
         </nav>
     </header>
     <body>
         <h1>E Sea E - An automated fish tank monitoring system</h1>
-        <p>This website showcases the final result of our ECE 196 project. We are team Emo Nemos, consisting of me (Kyle Hu), Chase Bastian, and Lingpeng Meng.</p>
+        <p>This website showcases the final result of our ECE 196 project. We are <a href="team.html">Team Emo Nemos</a>.</p>
         <section>
             <h2 id="problem"> Problem </h2>
-            <p> This problem was inspired by my dad's experience with maintainting a fish tank, and based on research in various forums, home saltwater fishtank upkeep, including monitoring food, water, temperature, salinity, pH, etc, is so time consuming that it is intimidating for the average person to pick up. Fishtank owners need to keep track of all of these variables constantly, while maintaining systems needed to filter water, and also making sure feed their fish regularly. This requires that the owner be home all the time, which is not always feasible. Solutions to this problem do exist, though they are expensive (one particular solution we found is priced at almost $3000), so we aim to provide a solution to the problem using our limited budget.</p>
+            <p> This problem was inspired by Kyle’s dad's experience with maintaining a fish tank, and based on research in various forums, home saltwater fish tank upkeep, including monitoring food, water, temperature, salinity, pH, etc, is so time consuming that it is intimidating for the average person to pick up. Fish tank owners need to keep track of all of these variables constantly, while maintaining systems needed to filter water, and also making sure to feed their fish regularly. This requires that the owner be home all the time, which is not always feasible. Solutions to this problem do exist, though they are expensive. For example, one solution sold by Neptune Systems costs about $3000. Our goal is  to provide a solution that automates a fish tank while still being affordable. </p>
         </section>
         <section>
             <h2 id="solution"> Solution </h2>
-            <p> We created a unified system that monitors and controls different parameters in a fishtank simultaneously. An Arduino Uno monitors the temperature of the fish tank, activating a water heater if it gets too low. It also cycles the lights on and off once per day, and dispenses food pellets five times a day at regular intervals. All of these parameters and setpoints can be controlled via a web interface, which communicates with the Arduino via Bluetooth. </p>
+            <p> We created a unified system that monitors and controls different parameters in a fish tank simultaneously. An Arduino Uno monitors the temperature of the fish tank, activating a water heater if it gets too low. It also cycles the lights on and off once per day, and dispenses food pellets twice a day at regular intervals. All of these parameters including temperature, lighting times, and feeding amounts can be controlled via a web interface, which communicates with the Arduino via Bluetooth. </p>
             <p> Our hypothesis for testing included the following requirements: </p>
             <ul>
-                <li> The feeder should be able to provide 5 pellets per fish per day. </li>
+                <li> The feeder should be able to provide 5 pellets per fish twice daily. </li>
                 <li> The lighting system should be able to provide 12 hours of light per day. </li>
                 <li> The heating system should keep the tank temperature between 74 and 79 degrees Farenheit. </li>
             </ul>
+            <img class="product-img" src="assets/system-img.jpg">
+
+            <h3> System Overview</h3>
+            <p>The Arduino is the main control unit of the entire system. It monitors temperature and turns on/off the heater if the water temperature gets too hot or cold. It also toggles the lighting and activates the feeding system every time it receives an interrupt from the real time clock (RTC) module. </p>
+            <img src="assets/E Sea E Web Control.jpg">
+            <h4> Timing </h4>
+            <p> Fish need a day/night cycle, and the Arduino cannot keep accurate time by itself, so we use an RTC module to do so. Under regular use, the RTC will fire an interrupt whenever a certain time of day is reached (in our case, when a certain hour and minute is reached). The Arduino then runs an interrupt handler that both toggles the lights (turns them on if they are off and off if they are on), activates the feeder, and sets the next time when the RTC should trigger the next interrupt. </p>
+            <h4> Feeding </h4>
+            <p> The feeder uses an Archimedes screw to push pellets from a central housing to a hole where it falls into the tank. The screw is turned by a stepper motor, which has been calibrated to turn a precise amount to feed enough pellets for a single fish. The user can specify how many fish they are keeping in the tank, which will cause the feeder to turn that number of times. </p>
+            <h4> Lighting </h4>
+            <p> The lighting system is fairly simple - it consists of a strip of neopixels that toggle on or off depending on the time of day. </p>
+            <h4> Temperature </h4>
+            <p> A temperature sensor monitors temperature in the fish tank, and the Arduino checks this every 5 seconds. The Arduino is connected to two relays that activate on/off buttons on a remote, which controls an outlet which is connected to the heater. If the current temperature is lower than the desired temperature, the Arduino will activate the relay corresponding to the "on" button on the remote, which turns on the heater. Naturally, the opposite occurs if the temperature goes higher than the desired temperature. </p>
+            <h4> User Interface </h4>
+            <p> In order for the user to be able to adjust the parameters of the system, we created a webapp that the user can interface with in order to both view current parameters and change settings. The webapp communicates with the Arduino via Bluetooth (we use an HC-05 bluetooth module on the Arduino side), and any settings that  </p>
         </section>
         <section>
             <h2 id="process"> Process </h2>
             <p> Since our project was fairly modular, we worked on most of the individual components in parallel simultaneously. While some of our group members tested the temperature sensors, stepper motors, and real time clock module, others designed the automatic feeder in CAD and designed the web interface. Some preliminary CAD designs are shown below. </p>
-            <!-- TODO: CAD PICTURES -->
-            <p>To design the automatic feeder, I started by researching patents and drawing out diagrams for potential mechanisms that we could use. Most patents I found seemed to feature an Archimides screw, so this ended up being the basis for my final design, since this would be the easiest to put together. </p>
-            <p> While I designed the feeder, Chase and Lingpeng worked to test the temperature sensor, real time clock, lighting system, and Bluetooth module. </p>
+            <div class="image-series">
+                <img src="assets/Feeder Screw 1.png">
+                <img src="assets/Food Housing 2.png">
+                <img src="assets/Food Housing 3.png">
+                <img src="assets/Screw Housing.png"
+            </div>
+            <p> To design the automatic feeder, we started by researching patents and drawing out diagrams for potential mechanisms that we could use. Most patents we found seemed to feature an Archimides screw, so this ended up being the basis for our final design, since this would be the easiest to put together. Kyle then created CAD models and printed them out in the Maker space. Several iterations were required to fix issues with clearances, and we switched from a DC motor to a stepper motor as we realized a DC motor was far too quick for our purposes. In the end, the mechanism worked, apart from some jamming issues that we unfortunately did not have time to fix. </p>
+            <p> To construct many of the circuit components such as the RTC, LED lights, Bluetooth communication, and relay we followed the documentation and guides linked in our resources to build the circuit, and typically used the example code given in each library to confirm everything worked. The documentation in combination with example code from libraries allowed us to construct the functions we would need, such as turning the lights on to all one color, attaching an interrupt to the RTC chip to toggle the lights, or opening Bluetooth communication. </p>
+            <p> Initially we planned to control our heater by toggling a 120VAC outlet on and off when our target temperature was reached. There are a number of guides online and included in our resources that outline how to wire a 120VAC outlet to be toggled using a relay controlled by the Arduino. Unfortunately, despite confirming that we intended to use this method initially with Professor Morris, Mark would not let us use this method due to safety concerns. Instead, with the help of our TA Curtis, we quickly pivoted to use a premade IR controlled outlet. We hijacked the buttons used on the remote to be controlled by relays so we could toggle the outlet on and off as intended via Arduino still. It was a surprisingly simple change, though it did make the wiring near our Arduino considerably more messy. </p>
+            <p> We designed the webapp to communicate with our Arduino system to send parameters such as target temperature, lighting on and off times, and number of fish to feed. It also receives information from the Arduino, currently just the temperature read by the sensor. The design process for this went extremely smoothly, we used a lot of template code Chase had from ECE 140 this quarter. </p>
+
         </section>
         <section>
             <h2 id="challenges"> Challenges </h2>
             <p>Some challenges we faced included:</p>
             <ul>
-                <li> My inexperience with CAD led me to make more errors with clearances than I would have liked, which slowed down the process a lot. </li>
+                <li> Kyle’s inexperience with CAD led to several errors with clearances, which slowed down the process a lot. </li>
                 <li> Our PCB design, meant for mounting sensors and motors to the Arduino, ended up being unused due to us switching from using a DC motor to a stepper. </li>
                 <li> We learned how to use interrupts from the RTC to signal the Arduino to turn the lights on/off at scheduled times, and faced many issues setting it up. </li>
-                <li> We realized that our initial method of using a relay to directly control a 120V line was 
+                <li> We realized that our initial method of using a relay to directly control a 120VAC line was considered unsafe, and instead we had to revise our method to use relays to control a remote that controls a 120VAC line. </li>
             </ul>
         </section>
         <section>
             <h2 id="retrospective"> Retrospective </h2>
             <h3> Feeder </h3>
-            <p> While the feeder is able to dispense fish pellets automatically, there are two main reasons why I am unsatisfied with it: </p>
+            <p> While the feeder is able to dispense fish pellets automatically, there are two main reasons why we are unsatisfied with it: </p>
             <ul>
                 <li> The mechanism where the screw meets the housing has a sharp corner that jams fish pellets. </li>
-                <li> The hole where food goes in is too small and makes it difficult to reload the feeder. A hopper would have been helpful but due to time constraints and me unable to figure out how to CAD this I went with the simpler design.</li>
+                <li> The hole where food goes in is too small and makes it difficult to reload the feeder. A hopper would have been helpful but due to time constraints we went with the simpler design.</li>
             </ul>
-            <p> Had I been faster with prototyping, I may have been able to catch these issues earlier and potentially redesign the housing and avoid these issues. However, I am glad that I was able to at least get a prototype of the mechanism working. </p>
+            <p> Had we been faster with prototyping, we may have been able to catch these issues earlier and potentially redesign the housing and avoid these issues. However, we're glad that we were able to at least get a prototype of the mechanism working. </p>
             <h3> Temperature Control </h3>
+            <p> Our design in theory works well, however it is liable to toggling the heater on and off more than necessary. We should consider implementing some time of more intelligent control so as to not undershoot or overshoot the target temperature causing frequent adjustments. Also, in the future we should implement cleaner heater control as right now the hijacked remote controlled outlet is large and unwieldy. </p>
             <h3> Lighting </h3>
+            <p> This part of the system turned to be the most successful, so we're happy with it! One thing we do want to look into should we do this again would be to look for cheaper alternatives to the neopixel strip, or even perhaps making our own LED strip and control circuit. </p>
             <h3> Web Application / Bluetooth </h3>
+            <p> To improve our Web Application, we should display more information from the Arduino such as current temperature, feeding, and lighting metrics. Also, we should consider moving entirely from Bluetooth to Wifi so that the user does not have to pair to the Arduino to change metrics, and instead can access the webpage from anywhere. </p>
         <section>
             <h2 id="resources"> Resources </h2>
             <h3> Problem Research </h3>
             <ul>
                 <li> <a href="https://www.fishkeepingworld.com/clownfish/">Clownfish Living Requirements</li>
                     <li> <a href="https://www.reef2reef.com/"> Saltwater Aquarium Forums</a></li>
-                    <li> <a href="https://www.bulkreefsupply.com/trident-apex-controller-system-dream-bundle-neptune-systems-bundle.html">Example of Fully Automated System </a> </li>
+                    <li> <a href="https://www.bulkreefsupply.com/trident-apex-controller-system-dream-bundle-neptune-systems-bundle.html">Trident Apex Controller by Neptune Systems</a> </li>
                     <li> <a href="https://www.wellbots.com/products/aquagenesis-robosnail-automatic-aquarium-glass-cleaner-for-fish-tanks">Automated Cleaner</a></li>
                     <li> <a href="https://www.amazon.com/dp/B003SNU1I2/">Heater with Temperature Control</a></li>
             </ul>
@@ -80,6 +107,12 @@
                 <li> <a href="https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf"> LED Datasheet </a></li>
                 <li> <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use"> LED Guide 1</a> </li> 
                 <li> <a href="https://create.arduino.cc/projecthub/electropeak/neopixel-how-to-control-ws2812-rgb-led-w-arduino-46c08f"> LED Guide 2</a> </li> 
+            </ul>
+            <h3> Fish Feeder Patents </h3>
+            <ul>
+                <li> <a href="https://patents.google.com/patent/CN2774138Y/en?q=automatic+fish+feeder&oq=automatic+fish+feeder">Patent 1</a> - design that uses an archimedes screw to move pellets </li>
+                <li> <a href="https://patents.google.com/patent/US6082299A/en?q=automatic+fish+feeder&language=ENGLISH&page=2">Patent 2</a> - another design that uses an archimedes screw </li>
+                <li> <a href="https://patents.google.com/patent/US3260238A/en?q=automatic+fish+feeder&oq=automatic+fish+feeder">Patent 3</a> - design that uses an absorbent wick which weighs down the device (no moving parts!) </li>
             </ul>
         </section>
     </body>
